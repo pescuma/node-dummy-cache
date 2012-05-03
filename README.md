@@ -2,3 +2,51 @@ node-dummy-cache
 ================
 
 A simple in memory cache to use with nodejs.
+
+
+## Installation
+
+	npm install node-dummt-cache
+
+
+## Usage
+
+### Simple key/value
+
+	var cache = require('node-dummy-cache');
+	
+	var users = cache.create(cache.ONE_HOUR);
+	
+	users.put(1, { name : 'A' });
+	
+	var user = users.get(1);
+
+### Fetch when needed
+
+	var cache = require('node-dummy-cache');
+	
+	var users = cache.create(cache.ONE_HOUR, function (id, callback) {
+		// Do complex stuff here
+		callback(undefined, user);
+	});
+	
+	users.get(1, function(err, user) {
+		// You got it
+	});
+
+### Mixed
+
+	var cache = require('node-dummy-cache');
+	
+	var users = cache.create(cache.ONE_HOUR, function (id, callback) {
+		// Do complex stuff here
+		callback(undefined, user);
+	});
+	
+	users.get(1, function(err, user) {
+		// You got it
+	});
+	
+	var user = users.get(1); // Returns only if cached
+	
+	
