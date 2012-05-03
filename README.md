@@ -6,7 +6,7 @@ A simple in memory cache to use with nodejs.
 
 ## Installation
 
-	npm install node-dummt-cache
+	npm install node-dummy-cache
 
 
 ## Usage
