@@ -1,0 +1,10 @@
+{
+    "name": "node-dummy-cache"
+  , "description" : "A simple in memory cache to use with nodejs",
+  , "version": "0.1.0"
+  , "author" : "Ricardo Pescuma Domenecci"
+  , "url" : "http://github.com/pescuma/node-dummy-cache"
+  , "dependencies": {}
+  , "main" : "./lib/cache.js"
+  , "repository":  { "type": "git", "url": "http://github.com/pescuma/node-dummy-cache" }
+}
