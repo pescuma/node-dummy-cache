@@ -8,8 +8,7 @@ exports['Put/get tests'] = {
 	c : undefined,
 
 	setUp : function(callback) {
-		// Set min time for the invalidate
-		cache.MIN_TIME = 10;
+		cache.SET_MIN_TIME(10);
 
 		callback();
 	},
@@ -53,8 +52,7 @@ exports['Fetch with callback tests'] = {
 	c : undefined,
 
 	setUp : function(callback) {
-		// Set min time for the invalidate
-		cache.MIN_TIME = 10;
+		cache.SET_MIN_TIME(10);
 
 		callback();
 	},
@@ -113,7 +111,7 @@ exports['Fetch with callback tests'] = {
 	'Two gets result in only one method call' : function(test) {
 		var calls = 0;
 		var notifies = 0;
-		
+
 		var cb;
 		c = cache.create(function(id, callback) {
 			calls++;
@@ -145,8 +143,32 @@ exports['Fetch with callback tests'] = {
 
 		test.equal(calls, 1);
 		test.equal(notifies, 3);
-		
+
 		test.done();
 	},
 
+	'Timeout during fetch' : function(test) {
+		var cb;
+		c = cache.create(10, function(id, callback) {
+			cb = callback;
+		});
+
+		var notifies = 0;
+		c.get(1, function(err, data) {
+			notifies++;
+		});
+
+		test.equal(notifies, 0);
+
+		setTimeout(function() {
+
+			test.equal(notifies, 0);
+
+			cb();
+
+			test.equal(notifies, 1);
+
+			test.done();
+		}, 50);
+	},
 };
