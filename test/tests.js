@@ -234,4 +234,68 @@ exports['Function wrapper'] = {
 			test.done();
 		});
 	},
+
+	'Function style' : function(test) {
+		c = cache.create(function(a, b, c, callback) {
+			test.equal(a, 1);
+			test.equal(b, 2);
+			test.equal(c, 3);
+
+			callback('A', 'B', 'C');
+		});
+
+		c(1, 2, 3, function(err, data1, data2) {
+			test.equal(err, 'A');
+			test.equal(data1, 'B');
+			test.equal(data2, 'C');
+
+			test.done();
+		});
+	},
+
+	'Function style mixed' : function(test) {
+		c = cache.create(function(a, b, c, callback) {
+			test.equal(a, 1);
+			test.equal(b, 2);
+			test.equal(c, 3);
+
+			callback(undefined, 'A');
+		});
+
+		test.strictEqual(c(1, 2, 3), undefined);
+
+		c(1, 2, 3, function(err, data) {
+			test.strictEqual(err, undefined);
+			test.equal(data, 'A');
+		});
+
+		test.strictEqual(c(1, 2, 3), 'A');
+
+		test.done();
+	},
+
+	'Function style with timer' : function(test) {
+		c = cache.create(10, function(a, b, c, callback) {
+			test.equal(a, 1);
+			test.equal(b, 2);
+			test.equal(c, 3);
+
+			callback(undefined, 'A');
+		});
+
+		test.strictEqual(c(1, 2, 3), undefined);
+
+		c(1, 2, 3, function(err, data) {
+			test.strictEqual(err, undefined);
+			test.equal(data, 'A');
+		});
+
+		test.equal(c(1, 2, 3), 'A');
+
+		setTimeout(function() {
+			test.strictEqual(c(1, 2, 3), undefined);
+
+			test.done();
+		}, 50);
+	},
 };
