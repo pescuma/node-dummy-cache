@@ -100,13 +100,53 @@ exports['Fetch with callback tests'] = {
 
 		c.get(1, function(err, data) {
 			test.equal(data, 'A');
-			test.strictEqual(c.get(1), 'A');
+			test.equal(c.get(1), 'A');
 
 			setTimeout(function() {
 				test.strictEqual(c.get(1), undefined);
-				
+
 				test.done();
 			}, 30);
 		});
 	},
+
+	'Two gets result in only one method call' : function(test) {
+		var calls = 0;
+		var notifies = 0;
+		
+		var cb;
+		c = cache.create(function(id, callback) {
+			calls++;
+			cb = callback;
+		});
+
+		c.get(1, function(err, data) {
+			notifies++;
+		});
+
+		test.equal(calls, 1);
+		test.equal(notifies, 0);
+
+		c.get(1, function(err, data) {
+			notifies++;
+		});
+
+		test.equal(calls, 1);
+		test.equal(notifies, 0);
+
+		c.get(1, function(err, data) {
+			notifies++;
+		});
+
+		test.equal(calls, 1);
+		test.equal(notifies, 0);
+
+		cb();
+
+		test.equal(calls, 1);
+		test.equal(notifies, 3);
+		
+		test.done();
+	},
+
 };
