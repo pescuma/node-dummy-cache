@@ -172,3 +172,66 @@ exports['Fetch with callback tests'] = {
 		}, 50);
 	},
 };
+
+exports['Function wrapper'] = {
+	c : undefined,
+
+	setUp : function(callback) {
+		cache.SET_MIN_TIME(10);
+
+		callback();
+	},
+
+	tearDown : function(callback) {
+		c.shutdown();
+
+		callback();
+	},
+
+	'1 param + callback' : function(test) {
+		c = cache.create(function(p1, callback) {
+			test.equal(p1, 1);
+
+			callback('A', 'B', 'C');
+		});
+
+		c.get(1, function(a, b, c) {
+			test.equal(a, 'A');
+			test.equal(b, 'B');
+			test.equal(c, 'C');
+
+			test.done();
+		});
+	},
+
+	'2 params + callback' : function(test) {
+		c = cache.create(function(p1, p2, callback) {
+			test.equal(p1, 1);
+			test.equal(p2, 2);
+
+			callback('A', 'B', 'C');
+		});
+
+		c.get(1, 2, function(a, b, c) {
+			test.equal(a, 'A');
+			test.equal(b, 'B');
+			test.equal(c, 'C');
+
+			test.done();
+		});
+	},
+
+	'0 params + callback' : function(test) {
+		c = cache.create(function(callback) {
+			callback('A', 'B', 'C');
+		});
+
+		c.get(function(a, b, c) {
+			test.equal(a, 'A');
+			test.equal(b, 'B');
+			test.equal(c, 'C');
+
+			test.done();
+		});
+	},
+};
