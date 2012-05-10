@@ -155,3 +155,7 @@ Creates a new cache. All values must be added to cache using put.
 
 Params:
 - maxAliveTimeMS : Max time a value will stay in cache starting with its creation
+
+### cache.create()
+
+Creates a new cache. Values never expires. All values must be added to cache using put.
