@@ -31,6 +31,18 @@ exports['Put/get tests'] = {
 		test.done();
 	},
 
+	'Multiple values' : function(test) {
+		c = cache.create();
+
+		c.put(1, 'A');
+		c.put(2, 'B');
+
+		test.equal(c.get(1), 'A');
+		test.equal(c.get(2), 'B');
+
+		test.done();
+	},
+
 	'Cache with timer' : function(test) {
 		c = cache.create(10);
 
@@ -73,6 +85,40 @@ exports['Fetch with callback tests'] = {
 
 			test.done();
 		});
+	},
+
+	'Multiple values' : function(test) {
+		var calls = 0;
+		c = cache.create(function(id, callback) {
+			calls++;
+			callback(undefined, 'A' + id);
+		});
+
+		c.get(1, function(err, data) {
+			test.equal(data, 'A1');
+		});
+
+		test.equal(calls, 1);
+
+		c.get(2, function(err, data) {
+			test.equal(data, 'A2');
+		});
+
+		test.equal(calls, 2);
+
+		c.get(1, function(err, data) {
+			test.equal(data, 'A1');
+		});
+
+		test.equal(calls, 2);
+
+		c.get(2, function(err, data) {
+			test.equal(data, 'A2');
+		});
+
+		test.equal(calls, 2);
+
+		test.done();
 	},
 
 	'Simple cache plus get' : function(test) {
