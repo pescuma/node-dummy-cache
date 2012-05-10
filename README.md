@@ -3,6 +3,8 @@ node-dummy-cache
 
 A simple in memory cache to use with nodejs.
 
+[![Build Status](https://secure.travis-ci.org/pescuma/node-dummy-cache.png)](http://travis-ci.org/pescuma/node-dummy-cache)
+
 
 ## Installation
 
