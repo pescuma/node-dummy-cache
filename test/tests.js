@@ -58,6 +58,42 @@ exports['Put/get tests'] = {
 			test.done();
 		}, 30);
 	},
+
+	'Remove' : function(test) {
+		c = cache.create();
+
+		c.put(1, 'A');
+
+		test.equal(c.get(1), 'A');
+		
+		c.remove(1);
+
+		test.strictEqual(c.get(1), undefined);
+		
+		test.done();
+	},
+
+	'Remove multiple' : function(test) {
+		c = cache.create();
+
+		c.put(1, 'A');
+		c.put(2, 'B');
+
+		test.equal(c.get(1), 'A');
+		test.equal(c.get(2), 'B');
+		
+		c.remove(2);
+
+		test.equal(c.get(1), 'A');
+		test.strictEqual(c.get(2), undefined);
+		
+		c.remove(1);
+
+		test.strictEqual(c.get(1), undefined);
+		test.strictEqual(c.get(2), undefined);
+		
+		test.done();
+	},
 };
 
 exports['Fetch with callback tests'] = {
