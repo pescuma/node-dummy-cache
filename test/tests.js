@@ -54,7 +54,8 @@ exports['Put/get tests'] = {
 
 		setTimeout(function() {
 			test.strictEqual(c.get(1), undefined);
-
+			
+			test.expect(3);
 			test.done();
 		}, 30);
 	},
@@ -111,6 +112,19 @@ exports['Fetch with callback tests'] = {
 		callback();
 	},
 
+	'Simple get' : function(test) {
+		c = cache.create(function(id, callback) {
+			callback(undefined, 'A');
+		});
+
+		c.get(1, function(err, data) {
+			test.equal(data, 'A');
+		});
+		
+		test.expect(1);
+		test.done();
+	},
+
 	'Simple cache' : function(test) {
 		c = cache.create(function(id, callback) {
 			callback(undefined, 'A');
@@ -118,9 +132,14 @@ exports['Fetch with callback tests'] = {
 
 		c.get(1, function(err, data) {
 			test.equal(data, 'A');
-
-			test.done();
 		});
+
+		c.get(1, function(err, data) {
+			test.equal(data, 'A');
+		});
+		
+		test.expect(2);
+		test.done();
 	},
 
 	'Multiple values' : function(test) {
@@ -154,6 +173,7 @@ exports['Fetch with callback tests'] = {
 
 		test.equal(calls, 2);
 
+		test.expect(8);
 		test.done();
 	},
 
@@ -166,9 +186,10 @@ exports['Fetch with callback tests'] = {
 
 		c.get(1, function(err, data) {
 			test.equal(c.get(1), 'A');
-
-			test.done();
 		});
+		
+		test.expect(2);
+		test.done();
 	},
 
 	'Cache with timer' : function(test) {
@@ -226,6 +247,7 @@ exports['Fetch with callback tests'] = {
 		test.equal(calls, 1);
 		test.equal(notifies, 3);
 
+		test.expect(8);
 		test.done();
 	},
 
@@ -353,6 +375,7 @@ exports['Function wrapper'] = {
 
 		test.strictEqual(c(1, 2, 3), 'A');
 
+		test.expect(7);
 		test.done();
 	},
 
@@ -377,6 +400,7 @@ exports['Function wrapper'] = {
 		setTimeout(function() {
 			test.strictEqual(c(1, 2, 3), undefined);
 
+			test.expect(8);
 			test.done();
 		}, 50);
 	},
