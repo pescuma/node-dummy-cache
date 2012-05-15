@@ -16,9 +16,9 @@ A simple in memory cache to use with nodejs.
 ### Simple key/value
 
 ```javascript
-var cache = require('node-dummy-cache');
+var cacheFactory = require('node-dummy-cache');
 
-var users = cache.create(cache.ONE_HOUR);
+var users = cacheFactory.create(cacheFactory.ONE_HOUR);
 
 users.put(1, { name : 'A' });
 
@@ -28,9 +28,9 @@ var user = users.get(1);
 ### Fetch when needed
 
 ```javascript
-var cache = require('node-dummy-cache');
+var cacheFactory = require('node-dummy-cache');
 
-var users = cache.create(cache.ONE_HOUR, function (id, callback) {
+var users = cacheFactory.create(cacheFactory.ONE_HOUR, function (id, callback) {
 	// Do complex stuff here
 	callback(undefined, user);
 });
@@ -58,9 +58,9 @@ dummy(1, 2, 3, function(err, data1, data2) {
 Adding cache:
 
 ```javascript
-var cache = require('node-dummy-cache');
+var cacheFactory = require('node-dummy-cache');
 
-var dummy = cache.create(cache.ONE_HOUR, function (a, b, c, callback) {
+var dummy = cacheFactory.create(cacheFactory.ONE_HOUR, function (a, b, c, callback) {
 	// Do complex stuff here
 	callback(undefined, 'A', 'B');
 });
@@ -73,9 +73,9 @@ dummy(1, 2, 3, function(err, data, data2) {
 ### Mixed
 
 ```javascript
-var cache = require('node-dummy-cache');
+var cacheFactory = require('node-dummy-cache');
 
-var users = cache.create(cache.ONE_HOUR, function (id, callback) {
+var users = cacheFactory.create(cacheFactory.ONE_HOUR, function (id, callback) {
 	// Do complex stuff here
 	callback(undefined, user);
 });
@@ -97,9 +97,9 @@ var user = users(1); // Returns only if cached
 ### Complex
 
 ```javascript
-var cache = require('node-dummy-cache');
+var cacheFactory = require('node-dummy-cache');
 
-var users = cache.create(cache.ONE_HOUR, function (id1, id2, callback) {
+var users = cacheFactory.create(cacheFactory.ONE_HOUR, function (id1, id2, callback) {
 	// Do complex stuff here
 	callback(undefined, user, date);
 });
@@ -119,7 +119,7 @@ users.put(1, 2, user); // Adds the user, but no date
 
 All arguments passed to the get / put must be JSON serializable.
 
-### cache.create(maxAliveTimeMS: number, maxNotAccessedTimeMs: number, fetcher: function)
+### cacheFactory.create(maxAliveTimeMS: number, maxNotAccessedTimeMs: number, fetcher: function)
 
 Creates a new cache. 
 
@@ -128,7 +128,7 @@ Params:
 - maxNotAccessedTimeMs : Max time a value will stay in cache after its last access
 - fetcher : callback to fetch the data
 
-### cache.create(maxAliveTimeMS: number, fetcher: function)
+### cacheFactory.create(maxAliveTimeMS: number, fetcher: function)
 
 Creates a new cache. 
 
@@ -136,7 +136,7 @@ Params:
 - maxAliveTimeMS : Max time a value will stay in cache starting with its creation
 - fetcher : callback to fetch the data
 
-### cache.create(maxAliveTimeMS: number, maxNotAccessedTimeMs: number)
+### cacheFactory.create(maxAliveTimeMS: number, maxNotAccessedTimeMs: number)
 
 Creates a new cache. All values must be added to cache using put.
 
@@ -144,20 +144,20 @@ Params:
 - maxAliveTimeMS : Max time a value will stay in cache starting with its creation
 - maxNotAccessedTimeMs : Max time a value will stay in cache after its last access
 
-### cache.create(fetcher: function)
+### cacheFactory.create(fetcher: function)
 
 Creates a new cache. Values never expires.
 
 Params:
 - fetcher : callback to fetch the data
 
-### cache.create(maxAliveTimeMS: number)
+### cacheFactory.create(maxAliveTimeMS: number)
 
 Creates a new cache. All values must be added to cache using put.
 
 Params:
 - maxAliveTimeMS : Max time a value will stay in cache starting with its creation
 
-### cache.create()
+### cacheFactory.create()
 
 Creates a new cache. Values never expires. All values must be added to cache using put.
