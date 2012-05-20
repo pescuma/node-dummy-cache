@@ -1,14 +1,20 @@
 node-dummy-cache
 ================
 
-A simple in memory cache to use with nodejs.
+A simple in memory cache to use with javascript.
 
 [![Build Status](https://secure.travis-ci.org/pescuma/node-dummy-cache.png)](http://travis-ci.org/pescuma/node-dummy-cache)
 
 
 ## Installation
 
+### node.js
+
 	npm install node-dummy-cache
+
+### HTML
+
+Just import the script. For examples check ```sample/sample.html```.
 
 
 ## Usage
