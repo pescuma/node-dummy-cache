@@ -20,11 +20,12 @@ var cacheFactory = require('node-dummy-cache');
 
 ### HTML
 
-Download [lib/cache.js](https://raw.github.com/pescuma/node-dummy-cache/master/lib/cache.js).
+Download [lib/cache.js](https://raw.github.com/pescuma/node-dummy-cache/master/lib/cache.js) and [json2.js](https://raw.github.com/douglascrockford/JSON-js/master/json2.js).
 
 Import inside HTML:
 
 ```html
+<script type="text/javascript" src="json2.js"></script>
 <script type="text/javascript" src="cache.js"></script>
 ```
 
