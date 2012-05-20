@@ -12,9 +12,21 @@ A simple in memory cache to use with javascript.
 
 	npm install node-dummy-cache
 
+Import inside your code:
+
+```javascript
+var cacheFactory = require('node-dummy-cache');
+```
+
 ### HTML
 
-Just import the script. For examples check ```sample/sample.html```.
+Download ```lib/cache.js```. 
+
+Import inside HTML:
+
+```html
+<script type="text/javascript" src="cache.js"></script>
+```
 
 
 ## Usage
@@ -22,8 +34,6 @@ Just import the script. For examples check ```sample/sample.html```.
 ### Simple key/value
 
 ```javascript
-var cacheFactory = require('node-dummy-cache');
-
 var users = cacheFactory.create(cacheFactory.ONE_HOUR);
 
 users.put(1, { name : 'A' });
@@ -34,8 +44,6 @@ var user = users.get(1);
 ### Fetch when needed
 
 ```javascript
-var cacheFactory = require('node-dummy-cache');
-
 var users = cacheFactory.create(cacheFactory.ONE_HOUR, function (id, callback) {
 	// Do complex stuff here
 	callback(undefined, user);
@@ -64,8 +72,6 @@ dummy(1, 2, 3, function(err, data1, data2) {
 Adding cache:
 
 ```javascript
-var cacheFactory = require('node-dummy-cache');
-
 var dummy = cacheFactory.create(cacheFactory.ONE_HOUR, function (a, b, c, callback) {
 	// Do complex stuff here
 	callback(undefined, 'A', 'B');
@@ -79,8 +85,6 @@ dummy(1, 2, 3, function(err, data, data2) {
 ### Mixed
 
 ```javascript
-var cacheFactory = require('node-dummy-cache');
-
 var users = cacheFactory.create(cacheFactory.ONE_HOUR, function (id, callback) {
 	// Do complex stuff here
 	callback(undefined, user);
@@ -96,15 +100,13 @@ users(1, function(err, user) {
 
 var user = users.get(1); // Returns only if cached
 
-var user = users(1); // Returns only if cached
+user = users(1); // Returns only if cached
 ```
 
 
 ### Complex
 
 ```javascript
-var cacheFactory = require('node-dummy-cache');
-
 var users = cacheFactory.create(cacheFactory.ONE_HOUR, function (id1, id2, callback) {
 	// Do complex stuff here
 	callback(undefined, user, date);
