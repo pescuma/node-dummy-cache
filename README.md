@@ -20,7 +20,7 @@ var cacheFactory = require('node-dummy-cache');
 
 ### HTML
 
-Download ```lib/cache.js```. 
+Download [lib/cache.js](https://raw.github.com/pescuma/node-dummy-cache/master/lib/cache.js).
 
 Import inside HTML:
 
