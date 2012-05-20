@@ -1,0 +1,128 @@
+<html>
+<head>
+	<script type="text/javascript" src="../lib/cache.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+
+function title(name) {
+	document.write('<h2>' + name + '</h2>');
+}
+
+function assert(expected, actual) {
+	document.write('Expected: ' + expected + ' , Actual: ' + actual);
+	if (expected === actual)
+		document.write(' => <span style="color:green">OK</span>');
+	else
+		document.write(' => <span style="color:red">ERROR!</span>');
+	document.write('<br>');
+}
+
+{
+	title('Simple key/value');
+
+	var users = cacheFactory.create(cacheFactory.ONE_HOUR);
+
+	users.put(1, { name : 'A' });
+
+	var user = users.get(1);
+
+	assert('A', user.name);
+}
+
+{
+	title('Fetch when needed');
+
+	var users = cacheFactory.create(cacheFactory.ONE_HOUR, function (id, callback) {
+		assert(1, id);
+		
+		callback(undefined, { name : 'A' });
+	});
+
+	users.get(1, function(err, user) {
+		assert(undefined, err);
+		assert('A', user.name);
+	});
+}
+
+{
+	title('Function style');
+
+	var dummy = cacheFactory.create(cacheFactory.ONE_HOUR, function (a, b, c, callback) {
+		assert(1, a);
+		assert(2, b);
+		assert(3, c);
+
+		callback(undefined, 'A', 'B');
+	});
+
+	dummy(1, 2, 3, function(err, data, data2) {
+		assert(undefined, err);
+		assert('A', data);
+		assert('B', data2);
+	});
+}
+
+{
+	title('Mixed');
+
+	var users = cacheFactory.create(cacheFactory.ONE_HOUR, function (id, callback) {
+		assert(1, id);
+		
+		callback(undefined, { name : 'A' });
+	});
+
+	users.get(1, function(err, user) {
+		assert(undefined, err);
+		assert('A', user.name);
+	});
+
+	users(1, function(err, user) {
+		assert(undefined, err);
+		assert('A', user.name);
+	});
+
+	var user = users.get(1); // Returns only if cached
+	assert('A', user.name);
+
+	user = users(2); // Returns only if cached
+	assert(undefined, user);
+}
+
+{
+	title('Complex');
+
+	var users = cacheFactory.create(cacheFactory.ONE_HOUR, function (id1, id2, callback) {
+		assert(1, id1);
+		assert(2, id2);
+		
+		callback(undefined, { name : 'A' }, 42);
+	});
+
+	users.get(1, 2, function(err, user, date) {
+		assert(undefined, err);
+		assert('A', user.name);
+		assert(42, date);
+	});
+
+	var user = users.get(1, 2); // Returns the user only if cached
+	
+	assert('A', user.name);
+	
+	users.clear();
+	
+	user = users.get(1, 2);
+	
+	assert(undefined, user);
+
+	users.put(1, 2, { val: 42 }); // Adds the user, but no date
+
+	users.get(1, 2, function(err, user, date) {
+		assert(undefined, err);
+		assert(42, user.val);
+		assert(undefined, date);
+	});
+}
+</script>
+</body>
+</html>
