@@ -169,3 +169,8 @@ Params:
 ### cacheFactory.create()
 
 Creates a new cache. Values never expires. All values must be added to cache using put.
+
+
+## License
+
+MIT. Check ```LICENSE``` file.
