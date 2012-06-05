@@ -174,4 +174,4 @@ Creates a new cache. Values never expires. All values must be added to cache usi
 
 ## License
 
-MIT. Check ```LICENSE``` file.
+MIT. Check [LICENSE](https://raw.github.com/pescuma/node-dummy-cache/master/LICENSE) file.
