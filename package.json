@@ -9,7 +9,7 @@
   , "repository":  { "type": "git", "url": "http://github.com/pescuma/node-dummy-cache" }
   , "dependencies": {}
   , "devDependencies": {
-      "nodeunit": "0.7.x"
+      "nodeunit": "0.8.x"
   }
   , "scripts": {
       "test": "nodeunit test/tests.js "
