@@ -1,4 +1,4 @@
-var cache = require('../lib/cache.js');
+var cache = require('../lib/dummy-cache.js');
 
 exports['Clear cache'] = {
 
