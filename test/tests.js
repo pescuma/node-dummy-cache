@@ -1,4 +1,4 @@
-var cache = require('../lib/dummy-cache.js');
+var cache = process.env.CACHE_COVERAGE ? require('../lib-cov/dummy-cache.js') : require('../lib/dummy-cache.js');
 
 exports['Clear cache'] = {};
 

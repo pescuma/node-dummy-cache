@@ -1,17 +1,25 @@
 {
-    "name": "node-dummy-cache"
-  , "description" : "A simple in memory cache to use with nodejs"
-  , "version": "0.2.3"
-  , "author" : "Ricardo Pescuma Domenecci"
-  , "url" : "http://github.com/pescuma/node-dummy-cache"
-  , "license": "MIT"
-  , "main" : "./lib/dummy-cache.js"
-  , "repository":  { "type": "git", "url": "http://github.com/pescuma/node-dummy-cache" }
-  , "dependencies": {}
-  , "devDependencies": {
-      "nodeunit": "0.8.x"
-  }
-  , "scripts": {
-      "test": "nodeunit test/tests.js "
+  "name": "node-dummy-cache",
+  "description": "A simple in memory cache to use with nodejs",
+  "version": "0.2.3",
+  "author": "Ricardo Pescuma Domenecci",
+  "url": "http://github.com/pescuma/node-dummy-cache",
+  "license": "MIT",
+  "main": "./lib/dummy-cache.js",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/pescuma/node-dummy-cache"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "codeclimate-test-reporter": "^0.3.3",
+    "coveralls": "^2.11.12",
+    "jscoverage": "^0.6.0",
+    "nodeunit": "^0.8.8"
+  },
+  "scripts": {
+    "test": "nodeunit test/tests.js",
+    "coveralls": "jscoverage lib && CACHE_COVERAGE=1 nodeunit --reporter=lcov test | coveralls",
+    "codeclimate": "jscoverage lib && CACHE_COVERAGE=1 nodeunit --reporter=lcov test | codeclimate-test-reporter"
   }
 }
