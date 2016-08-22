@@ -141,9 +141,7 @@ exports['Fetch with callback tests'] = {
 	},
 	
 	'Multiple values': function(test) {
-		var calls = 0;
 		c = cache.create(function(id, callback) {
-			calls++;
 			callback(undefined, 'A' + id);
 		});
 		
@@ -151,27 +149,11 @@ exports['Fetch with callback tests'] = {
 			test.equal(data, 'A1');
 		});
 		
-		test.equal(calls, 1);
-		
 		c.get(2, function(err, data) {
 			test.equal(data, 'A2');
 		});
 		
-		test.equal(calls, 2);
-		
-		c.get(1, function(err, data) {
-			test.equal(data, 'A1');
-		});
-		
-		test.equal(calls, 2);
-		
-		c.get(2, function(err, data) {
-			test.equal(data, 'A2');
-		});
-		
-		test.equal(calls, 2);
-		
-		test.expect(8);
+		test.expect(2);
 		test.done();
 	},
 	
@@ -190,7 +172,7 @@ exports['Fetch with callback tests'] = {
 		test.done();
 	},
 	
-	'Cache with timer': function(test) {
+	'Invalidate with timer': function(test) {
 		c = cache.create(10, function(id, callback) {
 			callback(undefined, 'A');
 		});
@@ -271,6 +253,143 @@ exports['Fetch with callback tests'] = {
 			test.equal(notifies, 1);
 			
 			test.done();
+		}, 50);
+	},
+};
+
+exports['Fetch with promise tests'] = {
+	c: undefined,
+	
+	setUp: function(callback) {
+		cache.SET_MIN_CLEANUP_TIME(10);
+		
+		callback();
+	},
+	
+	tearDown: function(callback) {
+		c.shutdown();
+		
+		callback();
+	},
+	
+	'Simple get': function(test) {
+		c = cache.create(cache.PROMISE, function(id) {
+			return Promise.resolve('A');
+		});
+		
+		c.get(1)
+			.then(function(data) {
+				test.equal(data, 'A');
+				test.done();
+			});
+	},
+	
+	'Simple cache': function(test) {
+		c = cache.create(cache.PROMISE, function(id) {
+			return Promise.resolve('A');
+		});
+		
+		c.get(1)
+			.then(function(data) {
+				test.equal(data, 'A');
+				
+				return c.get(1)
+			})
+			.then(function(data) {
+				test.equal(data, 'A');
+				
+				test.expect(2);
+				test.done();
+			});
+	},
+	
+	'Multiple values': function(test) {
+		c = cache.create(cache.PROMISE, function(id) {
+			return Promise.resolve('A' + id);
+		});
+		
+		c.get(1)
+			.then(function(data) {
+				test.equal(data, 'A1');
+				
+				return c.get(2);
+			})
+			.then(function(data) {
+				test.equal(data, 'A2');
+				
+				test.expect(2);
+				test.done();
+			});
+	},
+	
+	'Two gets result in only one method call': function(test) {
+		var calls = 0;
+		c = cache.create(cache.PROMISE, function(id) {
+			calls++;
+			return Promise.resolve('A');
+		});
+		
+		c.get(1)
+			.then(function(data) {
+				test.equal(calls, 1);
+				
+				return c.get(1);
+			})
+			.then(function(data) {
+				test.equal(calls, 1);
+				
+				test.done();
+			});
+	},
+	
+	'Invalidation by timer': function(test) {
+		var calls = 0;
+		c = cache.create(cache.PROMISE, 10, function(id) {
+			calls++;
+			return Promise.resolve('A');
+		});
+		
+		c.get(1)
+			.then(function(data) {
+				test.equal(calls, 1);
+				
+				setTimeout(function() {
+					c.get(1)
+						.then(function(data) {
+							test.equal(calls, 2);
+							
+							test.done();
+						});
+				}, 30);
+			});
+	},
+	
+	'Timeout during fetch': function(test) {
+		var cb;
+		c = cache.create(cache.PROMISE, 10, function(id) {
+			return new Promise(function(resolve, reject) {
+				cb = resolve;
+			});
+		});
+		
+		var notifies = 0;
+		c.get(1)
+			.then(function(data) {
+				notifies++;
+			});
+		
+		test.equal(notifies, 0);
+		
+		setTimeout(function() {
+			test.equal(notifies, 0);
+			
+			cb('A');
+			
+			setTimeout(function() {
+				test.equal(notifies, 1);
+				
+				test.done();
+			}, 2);
 		}, 50);
 	},
 };
