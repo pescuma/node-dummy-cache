@@ -4,6 +4,7 @@ node-dummy-cache
 A simple in memory cache to use with javascript.
 
 [![Build Status](https://secure.travis-ci.org/pescuma/node-dummy-cache.png)](http://travis-ci.org/pescuma/node-dummy-cache)
+[![Test Coverage](https://codeclimate.com/github/pescuma/node-dummy-cache/badges/coverage.svg)](https://codeclimate.com/github/pescuma/node-dummy-cache/coverage)
 
 
 ## Installation
