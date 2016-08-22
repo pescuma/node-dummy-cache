@@ -1,6 +1,85 @@
 var cache = process.env.CACHE_COVERAGE ? require('../lib-cov/dummy-cache.js') : require('../lib/dummy-cache.js');
 
-exports['Clear cache'] = {};
+// Internals copied here to test
+var TYPE_VALUE = 1;
+var TYPE_CALLBACK = 2;
+var TYPE_PROMISE = 3;
+
+exports['create'] = {
+	c: undefined,
+	
+	setUp: function(callback) {
+		cache.SET_MIN_CLEANUP_TIME(10);
+		
+		callback();
+	},
+	
+	tearDown: function(callback) {
+		c.shutdown();
+		
+		callback();
+	},
+	
+	noArgs: function(test) {
+		c = cache.create();
+		
+		test.equals(c.type, TYPE_VALUE);
+		test.equals(c.maxAliveTimeMs, cache.NEVER_EXPIRES);
+		test.equals(c.maxNotAccessedTimeMs, cache.NEVER_EXPIRES);
+		test.equals(c.onErrorMaxAliveTimeMs, cache.NEVER_EXPIRES);
+		test.strictEqual(c.fetcher, undefined);
+		test.done();
+	},
+	
+	optsPromiseFull: function(test) {
+		var f = function() {
+		};
+		c = cache.create({
+			type: cache.PROMISE,
+			maxAliveTimeMs: 1,
+			maxNotAccessedTimeMs: 2,
+			onErrorMaxAliveTimeMs: 3
+		}, f);
+		
+		test.equals(c.type, TYPE_PROMISE);
+		test.equals(c.maxAliveTimeMs, 1);
+		test.equals(c.maxNotAccessedTimeMs, 2);
+		test.equals(c.onErrorMaxAliveTimeMs, 3);
+		test.strictEqual(c.fetcher, f);
+		test.done();
+	},
+	
+	optsCallbackFull: function(test) {
+		var f = function() {
+		};
+		c = cache.create({
+			type: cache.CALLBACK,
+			maxAliveTimeMs: 1,
+			maxNotAccessedTimeMs: 2,
+			onErrorMaxAliveTimeMs: 3
+		}, f);
+		
+		test.equals(c.type, TYPE_CALLBACK);
+		test.equals(c.maxAliveTimeMs, 1);
+		test.equals(c.maxNotAccessedTimeMs, 2);
+		test.equals(c.onErrorMaxAliveTimeMs, 3);
+		test.strictEqual(c.fetcher, f);
+		test.done();
+	},
+	
+	args4: function(test) {
+		var f = function() {
+		};
+		c = cache.create(cache.PROMISE, 1, 2, f);
+		
+		test.equals(c.type, TYPE_PROMISE);
+		test.equals(c.maxAliveTimeMs, 1);
+		test.equals(c.maxNotAccessedTimeMs, 2);
+		test.equals(c.onErrorMaxAliveTimeMs, cache.NEVER_EXPIRES);
+		test.strictEqual(c.fetcher, f);
+		test.done();
+	},
+};
 
 exports['Put/get tests'] = {
 	c: undefined,
