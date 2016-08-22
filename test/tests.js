@@ -255,6 +255,19 @@ exports['Fetch with callback tests'] = {
 			test.done();
 		}, 50);
 	},
+	
+	'Get as promise': function(test) {
+		c = cache.create(function(id, callback) {
+			callback(undefined, 'A');
+		});
+		
+		c.getAsPromise(1)
+			.then(function(data) {
+				test.equal(data, 'A');
+				
+				test.done();
+			});
+	},
 };
 
 exports['Fetch with promise tests'] = {
@@ -303,6 +316,20 @@ exports['Fetch with promise tests'] = {
 			});
 	},
 	
+	'Simple cache plus get value': function(test) {
+		c = cache.create(cache.PROMISE, function(id) {
+			return Promise.resolve('A');
+		});
+		
+		c.get(1)
+			.then(function(data) {
+				test.equal(data, 'A');
+				test.equal(c.getValue(1), 'A');
+				
+				test.done();
+			});
+	},
+	
 	'Multiple values': function(test) {
 		c = cache.create(cache.PROMISE, function(id) {
 			return Promise.resolve('A' + id);
@@ -343,25 +370,20 @@ exports['Fetch with promise tests'] = {
 	},
 	
 	'Invalidation by timer': function(test) {
-		var calls = 0;
 		c = cache.create(cache.PROMISE, 10, function(id) {
-			calls++;
 			return Promise.resolve('A');
 		});
 		
 		c.get(1)
 			.then(function(data) {
-				test.equal(calls, 1);
-				
-				setTimeout(function() {
-					c.get(1)
-						.then(function(data) {
-							test.equal(calls, 2);
-							
-							test.done();
-						});
-				}, 30);
+				test.equal(data, 'A');
 			});
+		
+		setTimeout(function() {
+			test.strictEqual(c.getValue(1), undefined);
+			
+			test.done();
+		}, 30);
 	},
 	
 	'Timeout during fetch': function(test) {
@@ -391,6 +413,18 @@ exports['Fetch with promise tests'] = {
 				test.done();
 			}, 2);
 		}, 50);
+	},
+	
+	'Get as callback': function(test) {
+		c = cache.create(cache.PROMISE, function(id) {
+			return Promise.resolve('A');
+		});
+		
+		c.getAsCallback(1, function(err, data) {
+			test.equal(data, 'A');
+			
+			test.done();
+		});
 	},
 };
 
