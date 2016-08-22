@@ -10,6 +10,7 @@ node_js:
 after_script:
   - npm run coveralls
   - npm run codeclimate
+  - bithound check git@github.com:pescuma/node-dummy-cache.git
 addons:
   code_climate:
     repo_token: 854a355f4452a6dc628cccdd500b2b9b756025c8182cadbf2f6405883f03d2e2 
