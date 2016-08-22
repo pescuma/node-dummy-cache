@@ -3,8 +3,11 @@ node-dummy-cache
 
 A simple in memory cache to use with javascript.
 
+[![npm](https://img.shields.io/npm/v/node-dummy-cache.svg?maxAge=2592000)](https://github.com/pescuma/node-dummy-cache)
 [![Build Status](https://secure.travis-ci.org/pescuma/node-dummy-cache.png)](http://travis-ci.org/pescuma/node-dummy-cache)
 [![Test Coverage](https://codeclimate.com/github/pescuma/node-dummy-cache/badges/coverage.svg)](https://codeclimate.com/github/pescuma/node-dummy-cache/coverage)
+[![dependencies Status](https://david-dm.org/pescuma/node-dummy-cache/status.svg)](https://david-dm.org/pescuma/node-dummy-cache)
+[![devDependencies Status](https://david-dm.org/pescuma/node-dummy-cache/dev-status.svg)](https://david-dm.org/pescuma/node-dummy-cache?type=dev)
 
 
 ## Installation
