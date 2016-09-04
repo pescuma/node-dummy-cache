@@ -1,7 +1,7 @@
 {
   "name": "node-dummy-cache",
-  "description": "A simple in memory cache to use with nodejs",
-  "version": "0.2.3",
+  "description": "A simple in memory cache to use with nodejs or the browser",
+  "version": "0.3.0",
   "author": "Ricardo Pescuma Domenecci",
   "url": "http://github.com/pescuma/node-dummy-cache",
   "license": "MIT",

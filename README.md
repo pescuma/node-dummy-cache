@@ -46,19 +46,6 @@ users.put(1, { name : 'A' });
 var user = users.get(1);
 ```
 
-### Fetch when needed
-
-```javascript
-var users = cacheFactory.create(cacheFactory.ONE_HOUR, function (id, callback) {
-	// Do complex stuff here
-	callback(undefined, user);
-});
-
-users.get(1, function(err, user) {
-	// You got it
-});
-```
-
 ### Function style
 
 Before:
@@ -87,7 +74,39 @@ dummy(1, 2, 3, function(err, data, data2) {
 });
 ```
 
-### Mixed
+### Promise style
+
+Before:
+
+```javascript
+function dummy(a, b, c) {
+	return new Promise(function(resolve, reject) {
+		// Do complex stuff here
+		resolve('A');
+	});
+};
+
+dummy(1, 2, 3).then(function(data) {
+	// You got it
+});
+```
+
+Adding cache:
+
+```javascript
+var dummy = cacheFactory.create(cacheFactory.PROMISE, cacheFactory.ONE_HOUR, function (a, b, c) {
+	return new Promise(function(resolve, reject) {
+		// Do complex stuff here
+		resolve('A');
+	});
+});
+
+dummy(1, 2, 3).then(function(data) {
+	// You got it
+});
+```
+
+### Fetch when needed (callback style)
 
 ```javascript
 var users = cacheFactory.create(cacheFactory.ONE_HOUR, function (id, callback) {
@@ -98,8 +117,40 @@ var users = cacheFactory.create(cacheFactory.ONE_HOUR, function (id, callback) {
 users.get(1, function(err, user) {
 	// You got it
 });
+```
+
+### Fetch when needed (promise style)
+
+```javascript
+var users = cacheFactory.create(cacheFactory.PROMISE, cacheFactory.ONE_HOUR, function (id) {
+	return new Promise(function(resolve, reject) {
+		// Do complex stuff here
+		resolve(user);
+	});
+});
+
+users.get(1).then(function(user) {
+	// You got it
+});
+```
+
+### Mixed
+
+```javascript
+var users = cacheFactory.create(cacheFactory.ONE_HOUR, function (id, callback) {
+	// Do complex stuff here
+	callback(undefined, user);
+});
 
 users(1, function(err, user) {
+	// You got it
+});
+
+users.get(1, function(err, user) {
+	// You got it
+});
+
+users.getAsPromise(1).then(function(user) {
 	// You got it
 });
 
@@ -132,18 +183,51 @@ users.put(1, 2, user); // Adds the user, but no date
 
 All arguments passed to the get / put must be JSON serializable.
 
-### cacheFactory.create(maxAliveTimeMS: number, maxNotAccessedTimeMs: number, fetcher: function)
+### cacheFactory.create({ type: string, maxAliveTimeMS: number, maxNotAccessedTimeMs: number, onErrorMaxAliveTimeMs: number }, fetcher: function)
 
 Creates a new cache. 
+
+This is the base constructor, all the other ones are shortcuts to this.
+
+Params:
+- An object with the cache configuration. The available fields are:
+	- type : one of cacheFactory.CALLBACK or cacheFactory.PROMISE. The default is CALLBACK.
+	- maxAliveTimeMS : Max time a value will stay in cache starting with its creation. The default is forever.
+	- maxNotAccessedTimeMs : Max time a value will stay in cache after its last access. The default is to only consider alive time.
+	- onErrorMaxAliveTimeMs : Max time a value will stay in cache when an error is returned. The default is the same as maxAliveTimeMS.
+- fetcher : callback to fetch the data
+
+### cacheFactory.create(type: string, maxAliveTimeMS: number, maxNotAccessedTimeMs: number, fetcher: function)
+
+Creates a new cache. 
+
+Params:
+- type : one of cacheFactory.CALLBACK or cacheFactory.PROMISE
+- maxAliveTimeMS : Max time a value will stay in cache starting with its creation
+- maxNotAccessedTimeMs : Max time a value will stay in cache after its last access
+- fetcher : callback to fetch the data
+
+### cacheFactory.create(maxAliveTimeMS: number, maxNotAccessedTimeMs: number, fetcher: function)
+
+Creates a new cache. Fetcher expects a callback.
 
 Params:
 - maxAliveTimeMS : Max time a value will stay in cache starting with its creation
 - maxNotAccessedTimeMs : Max time a value will stay in cache after its last access
 - fetcher : callback to fetch the data
 
+### cacheFactory.create(type: string, maxAliveTimeMS: number, fetcher: function)
+
+Creates a new cache.
+
+Params:
+- type : one of cacheFactory.CALLBACK or cacheFactory.PROMISE
+- maxAliveTimeMS : Max time a value will stay in cache starting with its creation
+- fetcher : callback to fetch the data
+
 ### cacheFactory.create(maxAliveTimeMS: number, fetcher: function)
 
-Creates a new cache. 
+Creates a new cache. Fetcher expects a callback.
 
 Params:
 - maxAliveTimeMS : Max time a value will stay in cache starting with its creation
@@ -159,7 +243,7 @@ Params:
 
 ### cacheFactory.create(fetcher: function)
 
-Creates a new cache. Values never expires.
+Creates a new cache.  Fetcher expects a callback. Values never expires.
 
 Params:
 - fetcher : callback to fetch the data
